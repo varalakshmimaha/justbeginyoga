@@ -1,26 +1,135 @@
 @import "tailwindcss";
 
+/* ----- Just Begin Yoga design tokens (from the design handoff) ----- */
+@theme {
+  --color-bg: #f5f1e4;
+  --color-paper: #fbf8ef;
+  --color-green-deep: #2c6a39;
+  --color-green: #3c8049;
+  --color-olive: #86a73c;
+  --color-olive-soft: #bcd06a;
+  --color-ink: #22301d;
+  --color-muted: #5d6b52;
+  --color-cream: #f1efe2;
+  --color-dark: #1a2c1a;
+  --color-line: rgba(34, 48, 29, 0.12);
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --line: rgba(34, 48, 29, 0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+@keyframes jbRise {
+  0% {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes jbFadeDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jbSpin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.jb-rise {
+  animation: jbRise 0.9s ease both;
+}
+.jb-fade-down {
+  animation: jbFadeDown 0.9s ease both;
+}
+
+/* Rich-text rendering for blog article bodies */
+.jb-prose {
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--color-ink);
+}
+.jb-prose h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(26px, 3vw, 36px);
+  color: var(--color-green-deep);
+  line-height: 1.15;
+  margin: 2.2em 0 0.6em;
+}
+.jb-prose h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(21px, 2.4vw, 27px);
+  color: var(--color-green-deep);
+  margin: 1.8em 0 0.5em;
+}
+.jb-prose p {
+  margin: 0 0 1.2em;
+}
+.jb-prose ul,
+.jb-prose ol {
+  margin: 0 0 1.4em;
+  padding-left: 1.3em;
+}
+.jb-prose li {
+  margin: 0 0 0.6em;
+}
+.jb-prose a {
+  color: var(--color-green-deep);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(134, 167, 60, 0.5);
+}
+.jb-prose a:hover {
+  color: var(--color-olive);
+}
+.jb-prose blockquote {
+  margin: 1.6em 0;
+  padding: 4px 0 4px 24px;
+  border-left: 3px solid var(--color-olive);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--color-muted);
+}
+.jb-prose strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.jb-prose img {
+  width: 100%;
+  border-radius: 16px;
+  margin: 1.6em 0;
 }

@@ -1,0 +1,111 @@
+// Just Begin Yoga — data model
+// Provider: MySQL (shared / cPanel hosting)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model BlogPost {
+  id              Int       @id @default(autoincrement())
+  slug            String    @unique
+  title           String
+  category        String    @default("Wellbeing")
+  excerpt         String    @db.Text
+  body            String    @db.LongText // HTML body
+  coverImage      String? // /assets/... or uploaded URL
+  author          String    @default("Anusha Shetty")
+  readMinutes     Int       @default(5)
+
+  // SEO fields
+  metaTitle       String?
+  metaDescription String?   @db.Text
+  keywords        String?   @db.Text
+  ogImage         String?
+
+  published       Boolean   @default(false)
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([published, publishedAt])
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  title     String?
+  imageUrl  String // /assets/... or uploaded URL
+  caption   String?  @db.Text
+  category  String   @default("Classes")
+  sortOrder Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+model Video {
+  id          Int      @id @default(autoincrement())
+  title       String
+  youtubeId   String // the 11-char YouTube id (parsed from any URL on save)
+  description String?  @db.Text
+  category    String   @default("Practice")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  CONTACTED
+  CONVERTED
+  CLOSED
+}
+
+model ContactEnquiry {
+  id        Int           @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  service   String?
+  message   String        @db.Text
+  status    EnquiryStatus @default(NEW)
+  adminNote String?       @db.Text
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model GroupEnquiry {
+  id            Int           @id @default(autoincrement())
+  name          String
+  email         String?
+  phone         String?
+  groupSize     String?
+  preferredTime String?
+  message       String        @db.Text
+  status        EnquiryStatus @default(NEW)
+  adminNote     String?       @db.Text
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status, createdAt])
+}
