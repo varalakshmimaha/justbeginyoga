@@ -103,7 +103,7 @@ export default async function BlogPostPage({
 
       {/* Body */}
       <article className="bg-paper px-6 pb-16 pt-14 sm:px-12 lg:px-[86px]">
-        <div className="mx-auto max-w-[760px]">
+        <div className="mx-auto max-w-[820px]">
           <div className="jb-prose" dangerouslySetInnerHTML={{ __html: post.body }} />
 
           <div className="mt-12 rounded-[18px] border border-[var(--color-line)] bg-white p-7 text-center shadow-[0_16px_36px_-28px_rgba(20,40,20,0.4)]">

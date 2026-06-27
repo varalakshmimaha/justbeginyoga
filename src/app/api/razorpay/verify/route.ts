@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     razorpay_order_id?: string;
     razorpay_payment_id?: string;
     razorpay_signature?: string;
+    enquiryId?: number;
   };
   try {
     body = await request.json();
@@ -47,6 +48,18 @@ export async function POST(request: Request) {
     return Response.json({ verified: false }, { status: 400 });
   }
 
-  // Payment is genuine. Record it / fulfil here as the business grows.
+  // Payment is genuine — mark the related enrollment as paid.
+  if (body.enquiryId) {
+    try {
+      const { prisma } = await import("@/lib/db");
+      await prisma.groupEnquiry.update({
+        where: { id: Number(body.enquiryId) },
+        data: { status: "CONVERTED", adminNote: `PAID · ${razorpay_payment_id}` },
+      });
+    } catch (e) {
+      console.error("could not mark enrollment paid", e);
+    }
+  }
+
   return Response.json({ verified: true, paymentId: razorpay_payment_id });
 }
