@@ -40,40 +40,33 @@ const sections: { title: string; items: Item[] }[] = [
   },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <nav className="flex flex-col gap-5 rounded-2xl border border-[var(--color-line)] bg-paper p-3.5">
+    <nav className="flex flex-col gap-6 px-3 py-5">
       {sections.map((section) => (
         <div key={section.title}>
-          <div className="px-2.5 pb-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted/70">
+          <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.13em] text-gray-400">
             {section.title}
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-0.5">
             {section.items.map(({ href, label, exact, Icon }) => {
               const active = isActive(href, exact);
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`group flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-[14px] no-underline transition ${
+                  onClick={onNavigate}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] no-underline transition ${
                     active
-                      ? "bg-green-deep font-medium text-white shadow-[0_10px_24px_-14px_rgba(44,106,57,0.8)]"
-                      : "text-ink hover:bg-[rgba(134,167,60,0.12)]"
+                      ? "bg-green-deep/10 font-semibold text-green-deep"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-ink"
                   }`}
                 >
-                  <span
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition ${
-                      active
-                        ? "bg-white/15 text-white"
-                        : "bg-white text-green-deep ring-1 ring-[var(--color-line)] group-hover:ring-olive/40"
-                    }`}
-                  >
-                    <Icon className="h-[17px] w-[17px]" />
-                  </span>
+                  <Icon className={`h-[18px] w-[18px] ${active ? "text-green-deep" : "text-gray-400"}`} />
                   {label}
                 </Link>
               );

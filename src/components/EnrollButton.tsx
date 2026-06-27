@@ -244,7 +244,7 @@ export default function EnrollButton({
                     </div>
                   )}
 
-                  {(error || state.message) && (
+                  {(error || (step === 3 && !state.ok && state.message)) && (
                     <p className="mt-4 text-[13.5px] text-red-600">{error || state.message}</p>
                   )}
 
@@ -269,9 +269,9 @@ export default function EnrollButton({
                       <button
                         type="submit"
                         disabled={pending}
-                        onClick={() => {
-                          if (health.length === 0 && !healthOther) { setError("Please select your health conditions (or None)."); }
-                          else if (!goal) { setError("Please choose your goal."); }
+                        onClick={(e) => {
+                          if (health.length === 0 && !healthOther) { e.preventDefault(); setError("Please select your health conditions (or None)."); }
+                          else if (!goal) { e.preventDefault(); setError("Please choose your goal."); }
                         }}
                         className="rounded-full bg-gradient-to-r from-olive to-green-deep px-9 py-3 text-[13px] font-semibold uppercase tracking-[0.1em] text-white shadow-[0_14px_30px_-14px_rgba(44,106,57,0.7)] transition hover:-translate-y-0.5 disabled:opacity-60"
                       >
