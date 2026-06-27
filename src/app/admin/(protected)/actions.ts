@@ -277,3 +277,50 @@ export async function toggleVideoPublished(data: FormData) {
   revalidatePath("/admin/videos");
   revalidatePath("/videos");
 }
+
+// ---------- Site settings (singleton) ----------
+export type SettingsFormState = { ok: boolean; error: string };
+
+export async function saveSettings(
+  _prev: SettingsFormState,
+  data: FormData
+): Promise<SettingsFormState> {
+  await requireAdmin();
+  const get = (k: string) => String(data.get(k) || "").trim();
+
+  const existing = await prisma.siteSettings.findUnique({ where: { id: 1 } });
+  // Keep the saved secret if the field is left blank (so it isn't wiped).
+  const razorpayKeySecret = get("razorpayKeySecret") || existing?.razorpayKeySecret || null;
+
+  const fields = {
+    phone: get("phone") || null,
+    email: get("email") || null,
+    whatsapp: get("whatsapp") || null,
+    address: get("address") || null,
+    facebook: get("facebook") || null,
+    instagram: get("instagram") || null,
+    logoUrl: get("logoUrl") || null,
+    faviconUrl: get("faviconUrl") || null,
+    gaId: get("gaId") || null,
+    gscVerification: get("gscVerification") || null,
+    razorpayEnabled: data.get("razorpayEnabled") === "on",
+    razorpayKeyId: get("razorpayKeyId") || null,
+    razorpayKeySecret,
+  };
+
+  try {
+    await prisma.siteSettings.upsert({
+      where: { id: 1 },
+      update: fields,
+      create: { id: 1, ...fields },
+    });
+  } catch (e) {
+    console.error("saveSettings failed", e);
+    return { ok: false, error: "Could not save settings. Please try again." };
+  }
+
+  // Settings affect the shared layout (header/footer/analytics/favicon).
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/settings");
+  return { ok: true, error: "" };
+}

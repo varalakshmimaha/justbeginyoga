@@ -26,7 +26,15 @@ const navLinks = [
   { href: "/contact", label: "Contact Us" },
 ];
 
-export default function SiteHeader() {
+export default function SiteHeader({
+  logoUrl = "/assets/jb-logo.png",
+  facebook = SITE.social.facebook,
+  instagram = SITE.social.instagram,
+}: {
+  logoUrl?: string;
+  facebook?: string;
+  instagram?: string;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isActive = (href: string) =>
@@ -36,7 +44,7 @@ export default function SiteHeader() {
     <>
       <header className="jb-fade-down fixed inset-x-0 top-0 z-[120] flex items-center justify-between gap-4 border-b border-[var(--color-line)] bg-[rgba(251,248,239,0.9)] px-5 py-3 shadow-[0_8px_30px_-18px_rgba(20,40,20,0.4)] backdrop-blur-md sm:px-8 lg:px-14">
         <Link href="/" className="flex items-center gap-3 text-inherit no-underline">
-          <Image src="/assets/jb-logo.png" alt="Just Begin Yoga" width={54} height={54} className="h-[54px] w-auto max-[560px]:h-[42px]" priority />
+          <Image src={logoUrl} alt="Just Begin Yoga" width={54} height={54} className="h-[54px] w-auto max-[560px]:h-[42px]" priority />
           <span className="flex flex-col leading-none max-[560px]:hidden">
             <span className="font-serif text-[20px] font-bold tracking-[0.18em] text-green-deep">JUST BEGIN</span>
             <span className="mt-[3px] text-[8.5px] tracking-[0.34em] text-olive">WHERE YOGA BEGINS</span>
@@ -75,8 +83,8 @@ export default function SiteHeader() {
 
         <div className="flex items-center gap-3">
           <div className="hidden items-center gap-2.5 lg:flex">
-            <a href={SITE.social.facebook} target="_blank" rel="noopener" aria-label="Facebook" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] font-serif text-[17px] font-bold text-green-deep no-underline transition-colors hover:border-green-deep hover:bg-green-deep hover:text-white">f</a>
-            <a href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Instagram" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] text-green-deep no-underline transition-colors hover:border-green-deep hover:bg-green-deep hover:text-white">
+            <a href={facebook} target="_blank" rel="noopener" aria-label="Facebook" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] font-serif text-[17px] font-bold text-green-deep no-underline transition-colors hover:border-green-deep hover:bg-green-deep hover:text-white">f</a>
+            <a href={instagram} target="_blank" rel="noopener" aria-label="Instagram" className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] text-green-deep no-underline transition-colors hover:border-green-deep hover:bg-green-deep hover:text-white">
               <InstagramIcon className="h-[15px] w-[15px]" />
             </a>
           </div>
@@ -104,8 +112,8 @@ export default function SiteHeader() {
             </Link>
           ))}
           <div className="mt-4 flex gap-3">
-            <a href={SITE.social.facebook} target="_blank" rel="noopener" aria-label="Facebook" className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] font-serif text-[19px] font-bold text-green-deep no-underline">f</a>
-            <a href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Instagram" className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] text-green-deep no-underline">
+            <a href={facebook} target="_blank" rel="noopener" aria-label="Facebook" className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] font-serif text-[19px] font-bold text-green-deep no-underline">f</a>
+            <a href={instagram} target="_blank" rel="noopener" aria-label="Instagram" className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(34,48,29,0.2)] text-green-deep no-underline">
               <InstagramIcon className="h-[18px] w-[18px]" />
             </a>
           </div>

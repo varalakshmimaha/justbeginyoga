@@ -97,6 +97,12 @@ body {
 }
 .jb-prose p {
   margin: 0 0 1.2em;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+.jb-prose li {
+  text-align: justify;
 }
 .jb-prose ul,
 .jb-prose ol {

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 import Analytics from "@/components/Analytics";
-
-const gscVerification = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -21,47 +20,51 @@ const jost = Jost({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
-  title: {
-    default: `${SITE.name} — Online & In-person Yoga with Anusha Shetty`,
-    template: `%s | ${SITE.name}`,
-  },
-  description: SITE.description,
-  keywords: [
-    "yoga",
-    "online yoga classes",
-    "personal yoga",
-    "group yoga",
-    "corporate yoga",
-    "face yoga",
-    "Anusha Shetty",
-    "Just Begin Yoga",
-  ],
-  authors: [{ name: "Anusha Shetty — Just Begin Yoga" }],
-  icons: {
-    icon: "/assets/jb-logo.png",
-    apple: "/assets/jb-logo.png",
-  },
-  openGraph: {
-    type: "website",
-    siteName: SITE.name,
-    url: SITE.url,
-    images: [{ url: "/assets/river-pose.jpeg" }],
-  },
-  twitter: { card: "summary_large_image" },
-  robots: { index: true, follow: true },
-  // Google Search Console HTML-tag verification — inert until the token is set.
-  ...(gscVerification ? { verification: { google: gscVerification } } : {}),
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSettings();
+  return {
+    metadataBase: new URL(SITE.url),
+    title: {
+      default: `${SITE.name} — Online & In-person Yoga with Anusha Shetty`,
+      template: `%s | ${SITE.name}`,
+    },
+    description: SITE.description,
+    keywords: [
+      "yoga",
+      "online yoga classes",
+      "personal yoga",
+      "group yoga",
+      "corporate yoga",
+      "face yoga",
+      "Anusha Shetty",
+      "Just Begin Yoga",
+    ],
+    authors: [{ name: "Anusha Shetty — Just Begin Yoga" }],
+    icons: {
+      icon: s.faviconUrl,
+      apple: s.faviconUrl,
+    },
+    openGraph: {
+      type: "website",
+      siteName: SITE.name,
+      url: SITE.url,
+      images: [{ url: "/assets/river-pose.jpeg" }],
+    },
+    twitter: { card: "summary_large_image" },
+    robots: { index: true, follow: true },
+    // Google Search Console HTML-tag verification — inert until the token is set.
+    ...(s.gscVerification ? { verification: { google: s.gscVerification } } : {}),
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const s = await getSettings();
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable}`}>
       <body>{children}</body>
-      <Analytics />
+      <Analytics gaId={s.gaId} />
     </html>
   );
 }

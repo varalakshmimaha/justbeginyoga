@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { razorpayServerReady } from "@/lib/razorpay";
+import { razorpayReady, razorpaySecret } from "@/lib/razorpay-server";
 
 export const dynamic = "force-dynamic";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 // { razorpay_order_id, razorpay_payment_id, razorpay_signature }
 // Verifies the checkout signature server-side (HMAC-SHA256 with the secret).
 export async function POST(request: Request) {
-  if (!razorpayServerReady()) {
+  if (!(await razorpayReady())) {
     return Response.json(
       { error: "Online payments are not enabled." },
       { status: 503 }
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   }
 
   const expected = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
+    .createHmac("sha256", await razorpaySecret())
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest("hex");
 

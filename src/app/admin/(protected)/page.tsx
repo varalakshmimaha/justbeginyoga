@@ -2,6 +2,14 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { formatDate } from "@/lib/blog";
 import { STATUS_LABEL, STATUS_COLOR, type EnquiryStatusValue } from "@/lib/site";
+import {
+  MailIcon,
+  UsersIcon,
+  BlogIcon,
+  GalleryIcon,
+  VideoIcon,
+  ClockIcon,
+} from "@/components/admin/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -34,31 +42,60 @@ export default async function AdminDashboard() {
     prisma.groupEnquiry.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
   ]);
 
+  const newLeads = contactNew + groupNew;
+
   const cards = [
-    { label: "Contact enquiries", value: contactTotal, badge: `${contactNew} new`, href: "/admin/contact-enquiries" },
-    { label: "Group enquiries", value: groupTotal, badge: `${groupNew} new`, href: "/admin/group-enquiries" },
-    { label: "Blog posts", value: postTotal, badge: `${postPublished} live`, href: "/admin/blog" },
-    { label: "Gallery images", value: galleryTotal, badge: `${galleryPublished} live`, href: "/admin/gallery" },
-    { label: "Videos", value: videoTotal, badge: `${videoPublished} live`, href: "/admin/videos" },
-  ];
+    { label: "Contact enquiries", value: contactTotal, badge: `${contactNew} new`, tone: contactNew ? "amber" : "muted", href: "/admin/contact-enquiries", Icon: MailIcon },
+    { label: "Group enquiries", value: groupTotal, badge: `${groupNew} new`, tone: groupNew ? "amber" : "muted", href: "/admin/group-enquiries", Icon: UsersIcon },
+    { label: "Blog posts", value: postTotal, badge: `${postPublished} live`, tone: "green", href: "/admin/blog", Icon: BlogIcon },
+    { label: "Gallery images", value: galleryTotal, badge: `${galleryPublished} live`, tone: "green", href: "/admin/gallery", Icon: GalleryIcon },
+    { label: "Videos", value: videoTotal, badge: `${videoPublished} live`, tone: "green", href: "/admin/videos", Icon: VideoIcon },
+  ] as const;
+
+  const toneClass: Record<string, string> = {
+    amber: "bg-amber-100 text-amber-800 border-amber-200",
+    green: "bg-green-100 text-green-800 border-green-200",
+    muted: "bg-gray-100 text-gray-600 border-gray-200",
+  };
 
   return (
     <div>
-      <h1 className="font-serif text-[30px] font-semibold text-green-deep">Dashboard</h1>
-      <p className="mt-1 text-[14px] text-muted">An overview of enquiries and content.</p>
+      {/* header */}
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="font-serif text-[32px] font-semibold text-green-deep">Dashboard</h1>
+          <p className="mt-1 text-[14px] text-muted">An overview of your enquiries and content.</p>
+        </div>
+        <div className="rounded-2xl border border-[var(--color-line)] bg-paper px-5 py-3">
+          <div className="text-[11px] uppercase tracking-[0.14em] text-muted">New leads</div>
+          <div className="mt-0.5 flex items-baseline gap-2">
+            <span className="font-serif text-[26px] font-semibold text-green-deep">{newLeads}</span>
+            <span className="text-[12px] text-muted">awaiting reply</span>
+          </div>
+        </div>
+      </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      {/* stat cards */}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {cards.map((c) => (
-          <Link key={c.label} href={c.href} className="rounded-2xl border border-[var(--color-line)] bg-paper p-5 no-underline transition hover:shadow-[0_16px_36px_-28px_rgba(20,40,20,0.4)]">
+          <Link
+            key={c.label}
+            href={c.href}
+            className="group rounded-2xl border border-[var(--color-line)] bg-paper p-5 no-underline transition hover:-translate-y-1 hover:border-olive/30 hover:shadow-[0_20px_40px_-26px_rgba(20,40,20,0.45)]"
+          >
             <div className="flex items-start justify-between">
-              <span className="text-[13px] text-muted">{c.label}</span>
-              <span className="rounded-full bg-[rgba(134,167,60,0.16)] px-2.5 py-0.5 text-[11px] font-medium text-green-deep">{c.badge}</span>
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-deep/10 text-green-deep transition group-hover:bg-green-deep group-hover:text-white">
+                <c.Icon className="h-[21px] w-[21px]" />
+              </span>
+              <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${toneClass[c.tone]}`}>{c.badge}</span>
             </div>
-            <div className="mt-2 font-serif text-[36px] font-semibold text-ink">{c.value}</div>
+            <div className="mt-4 font-serif text-[34px] font-semibold leading-none text-ink">{c.value}</div>
+            <div className="mt-1.5 text-[13px] text-muted">{c.label}</div>
           </Link>
         ))}
       </div>
 
+      {/* recent lists */}
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <RecentList title="Latest contact enquiries" href="/admin/contact-enquiries" rows={recentContact} />
         <RecentList title="Latest group enquiries" href="/admin/group-enquiries" rows={recentGroup} />
@@ -80,23 +117,30 @@ function RecentList({
     <div className="rounded-2xl border border-[var(--color-line)] bg-paper p-5">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="font-serif text-[19px] font-semibold text-green-deep">{title}</h2>
-        <Link href={href} className="text-[13px] text-muted no-underline hover:text-green-deep">View all →</Link>
+        <Link href={href} className="text-[13px] text-muted no-underline transition hover:text-green-deep">View all →</Link>
       </div>
       {rows.length === 0 ? (
-        <p className="py-6 text-center text-[13px] text-muted">No enquiries yet.</p>
+        <p className="py-8 text-center text-[13px] text-muted">No enquiries yet.</p>
       ) : (
-        <ul className="divide-y divide-[var(--color-line)]">
+        <ul className="flex flex-col">
           {rows.map((r) => (
-            <li key={r.id} className="flex items-center justify-between gap-3 py-2.5">
-              <div className="min-w-0">
-                <div className="truncate text-[14px] font-medium text-ink">{r.name}</div>
-                <div className="truncate text-[12px] text-muted">{r.email}</div>
+            <li key={r.id} className="flex items-center justify-between gap-3 border-t border-[var(--color-line)] py-3 first:border-t-0">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-olive/80 to-green-deep text-[13px] font-semibold text-white">
+                  {(r.name?.[0] ?? "?").toUpperCase()}
+                </span>
+                <div className="min-w-0">
+                  <div className="truncate text-[14px] font-medium text-ink">{r.name}</div>
+                  <div className="truncate text-[12px] text-muted">{r.email ?? "No email"}</div>
+                </div>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className={`rounded-full border px-2 py-0.5 text-[10.5px] font-medium ${STATUS_COLOR[r.status as EnquiryStatusValue]}`}>
                   {STATUS_LABEL[r.status as EnquiryStatusValue]}
                 </span>
-                <span className="text-[11px] text-muted">{formatDate(r.createdAt)}</span>
+                <span className="flex items-center gap-1 text-[11px] text-muted">
+                  <ClockIcon className="h-3 w-3" /> {formatDate(r.createdAt)}
+                </span>
               </div>
             </li>
           ))}

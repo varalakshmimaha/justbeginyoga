@@ -1,15 +1,11 @@
-import {
-  RAZORPAY_KEY_ID,
-  createRazorpayOrder,
-  razorpayServerReady,
-} from "@/lib/razorpay";
+import { razorpayReady, razorpayKeyId, createRazorpayOrder } from "@/lib/razorpay-server";
 
 export const dynamic = "force-dynamic";
 
 // POST /api/razorpay/order  { amount: <rupees>, receipt?: string }
 // Creates a Razorpay order and returns the bits checkout.js needs.
 export async function POST(request: Request) {
-  if (!razorpayServerReady()) {
+  if (!(await razorpayReady())) {
     return Response.json(
       { error: "Online payments are not enabled." },
       { status: 503 }
@@ -38,7 +34,7 @@ export async function POST(request: Request) {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      keyId: RAZORPAY_KEY_ID,
+      keyId: await razorpayKeyId(),
     });
   } catch (e) {
     console.error("razorpay order route failed", e);

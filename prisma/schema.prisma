@@ -71,6 +71,29 @@ model Video {
   @@index([published, sortOrder])
 }
 
+// Singleton (id = 1) holding admin-editable site configuration.
+model SiteSettings {
+  id                Int      @id @default(1)
+  // Contact
+  phone             String?
+  email             String?
+  whatsapp          String?
+  address           String?  @db.Text
+  facebook          String?
+  instagram         String?
+  // Branding
+  logoUrl           String?
+  faviconUrl        String?
+  // Analytics / SEO
+  gaId              String?
+  gscVerification   String?
+  // Razorpay
+  razorpayEnabled   Boolean  @default(false)
+  razorpayKeyId     String?
+  razorpayKeySecret String?
+  updatedAt         DateTime @updatedAt
+}
+
 enum EnquiryStatus {
   NEW
   IN_PROGRESS

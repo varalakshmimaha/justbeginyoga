@@ -34,9 +34,10 @@ export default function VideoGallery({ videos }: { videos: VideoItem[] }) {
           <div className="relative aspect-video w-full bg-black">
             {playing === v.id ? (
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}?autoplay=1&rel=0`}
+                src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`}
                 title={v.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
                 className="absolute inset-0 h-full w-full"
               />
