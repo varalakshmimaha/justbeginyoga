@@ -77,41 +77,55 @@ export default async function BlogPostPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-green-deep to-[#1c4326] px-6 pb-16 pt-[130px] text-cream sm:px-12 sm:pt-[160px] lg:px-[86px]">
-        <div className="jb-rise relative mx-auto max-w-[820px] text-center">
-          <div className="mb-4 flex items-center justify-center gap-3 text-[12px] uppercase tracking-[0.2em] text-olive-soft">
-            <Link href="/blog" className="text-olive-soft no-underline hover:text-white">Journal</Link>
-            <span>/</span>
-            <span>{post.category}</span>
+      {/* Article header */}
+      <header className="bg-paper px-6 pb-10 pt-[116px] sm:px-12 sm:pt-[148px] lg:px-[86px]">
+        <div className="mx-auto max-w-[760px] text-center">
+          <Link href="/blog" className="inline-flex items-center gap-1.5 text-[13px] text-muted no-underline transition hover:text-green-deep">
+            ← Back to journal
+          </Link>
+          <div className="mt-5">
+            <span className="inline-block rounded-full bg-[rgba(134,167,60,0.16)] px-4 py-1.5 text-[11.5px] font-semibold uppercase tracking-[0.16em] text-green-deep">
+              {post.category}
+            </span>
           </div>
-          <h1 className="m-0 font-serif text-[clamp(32px,4.6vw,60px)] font-medium leading-[1.05]">{post.title}</h1>
-          <div className="mt-5 text-[14px] text-[rgba(241,239,226,0.85)]">
-            By {post.author} · {formatDate(post.publishedAt)} · {post.readMinutes} min read
+          <h1 className="mx-auto mt-5 max-w-[720px] font-serif text-[clamp(30px,4.4vw,52px)] font-semibold leading-[1.12] text-ink">
+            {post.title}
+          </h1>
+          <p className="mx-auto mt-5 max-w-[600px] text-[clamp(15px,1.4vw,18px)] font-light leading-[1.7] text-muted">
+            {post.excerpt}
+          </p>
+          <div className="mt-7 flex items-center justify-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-olive to-green-deep text-[16px] font-semibold text-white">
+              {(post.author?.[0] ?? "A").toUpperCase()}
+            </span>
+            <div className="text-left">
+              <div className="text-[14px] font-medium text-ink">{post.author}</div>
+              <div className="text-[12.5px] text-muted">{formatDate(post.publishedAt)} · {post.readMinutes} min read</div>
+            </div>
           </div>
         </div>
-      </section>
+      </header>
 
       {/* Cover */}
       {post.coverImage && (
         <div className="bg-paper px-6 sm:px-12 lg:px-[86px]">
-          <div className="mx-auto -mt-10 max-w-[900px] overflow-hidden rounded-[24px] shadow-[0_30px_70px_-30px_rgba(20,40,20,0.5)]">
-            <Image src={post.coverImage} alt={post.title} width={900} height={480} className="h-auto w-full object-cover" priority />
+          <div className="mx-auto max-w-[940px] overflow-hidden rounded-[22px] shadow-[0_34px_70px_-34px_rgba(20,40,20,0.5)]">
+            <Image src={post.coverImage} alt={post.title} width={940} height={528} className="aspect-[16/9] w-full object-cover" priority />
           </div>
         </div>
       )}
 
       {/* Body */}
-      <article className="bg-paper px-6 pb-16 pt-14 sm:px-12 lg:px-[86px]">
-        <div className="mx-auto max-w-[820px]">
+      <article className="bg-paper px-6 pb-20 pt-12 sm:px-12 lg:px-[86px]">
+        <div className="mx-auto max-w-[720px]">
           <div className="jb-prose" dangerouslySetInnerHTML={{ __html: post.body }} />
 
-          <div className="mt-12 rounded-[18px] border border-[var(--color-line)] bg-white p-7 text-center shadow-[0_16px_36px_-28px_rgba(20,40,20,0.4)]">
-            <h3 className="m-0 font-serif text-[24px] font-semibold text-green-deep">Want guidance on your practice?</h3>
-            <p className="mx-auto mt-3 max-w-[480px] text-[15px] font-light leading-[1.7] text-muted">
+          <div className="mt-14 overflow-hidden rounded-[20px] border border-[var(--color-line)] bg-gradient-to-br from-green-deep to-[#1c4326] p-8 text-center text-cream shadow-[0_24px_50px_-30px_rgba(20,40,20,0.6)]">
+            <h3 className="m-0 font-serif text-[25px] font-semibold text-white">Want guidance on your practice?</h3>
+            <p className="mx-auto mt-3 max-w-[480px] text-[15px] font-light leading-[1.7] text-[rgba(241,239,226,0.88)]">
               Book a free trial class with Anusha and put these ideas into practice with personal guidance.
             </p>
-            <Link href="/contact" className="mt-5 inline-block rounded-full bg-gradient-to-r from-olive to-green-deep px-7 py-3.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-white no-underline shadow-[0_14px_30px_-14px_rgba(44,106,57,0.7)] transition hover:-translate-y-0.5">
+            <Link href="/contact" className="mt-5 inline-block rounded-full bg-cream px-8 py-3.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-green-deep no-underline shadow-[0_14px_30px_-14px_rgba(0,0,0,0.4)] transition hover:-translate-y-0.5">
               Book a Free Trial
             </Link>
           </div>
