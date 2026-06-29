@@ -41,8 +41,9 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     authors: [{ name: "Anusha Shetty — Just Begin Yoga" }],
     icons: {
-      icon: s.faviconUrl,
-      apple: s.faviconUrl,
+      icon: [{ url: s.faviconUrl }],
+      shortcut: [{ url: s.faviconUrl }],
+      apple: [{ url: s.faviconUrl }],
     },
     openGraph: {
       type: "website",

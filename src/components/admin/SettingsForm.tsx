@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { saveSettings, type SettingsFormState } from "@/app/admin/(protected)/actions";
 
@@ -80,17 +80,9 @@ export default function SettingsForm({ values }: { values: SettingsValues }) {
       <div className={cardCls}>
         <h2 className={sectionTitle}>Branding</h2>
         <p className="mb-5 mt-1 text-[13px] text-muted">Upload images to <code className="rounded bg-white px-1 ring-1 ring-[var(--color-line)]">/public/assets</code> then reference the path, or paste a full URL.</p>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className={lbl}>Logo</label>
-            <input name="logoUrl" defaultValue={v.logoUrl ?? ""} placeholder="/assets/jb-logo.png" className={field} />
-            <p className={hint}>Used in the header & footer.</p>
-          </div>
-          <div>
-            <label className={lbl}>Favicon</label>
-            <input name="faviconUrl" defaultValue={v.faviconUrl ?? ""} placeholder="/assets/jb-logo.png" className={field} />
-            <p className={hint}>Browser-tab icon (PNG/ICO/SVG).</p>
-          </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <ImageUploadField name="logoUrl" label="Logo" defaultValue={v.logoUrl ?? ""} hint="Used in the header & footer." />
+          <ImageUploadField name="faviconUrl" label="Favicon" defaultValue={v.faviconUrl ?? ""} hint="Browser-tab icon. Use a square PNG (512×512) for best results in Google." />
         </div>
       </div>
 
@@ -137,5 +129,76 @@ export default function SettingsForm({ values }: { values: SettingsValues }) {
         {state.error && <span className="text-[13px] text-red-600">{state.error}</span>}
       </div>
     </form>
+  );
+}
+
+function ImageUploadField({
+  name,
+  label,
+  defaultValue,
+  hint,
+}: {
+  name: string;
+  label: string;
+  defaultValue: string;
+  hint: string;
+}) {
+  const [value, setValue] = useState(defaultValue);
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function upload(file: File) {
+    setErr("");
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      setValue(data.url);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      <label className={lbl}>{label}</label>
+      <div className="flex items-center gap-3">
+        {value ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={value} alt="" className="h-12 w-12 shrink-0 rounded-lg border border-[var(--color-line)] bg-white object-contain p-1" />
+        ) : (
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-dashed border-[var(--color-line)] text-gray-300">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="8.5" cy="9.5" r="1.6" /><path d="M21 16l-4.5-4.5L7 21" /></svg>
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          className="rounded-lg border border-[var(--color-line)] bg-white px-3.5 py-2 text-[13px] font-medium text-green-deep transition hover:border-olive/50 disabled:opacity-60"
+        >
+          {uploading ? "Uploading…" : "Select image"}
+        </button>
+      </div>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) upload(f);
+        }}
+      />
+      <input name={name} value={value} onChange={(e) => setValue(e.target.value)} placeholder="/assets/jb-logo.png — or paste a URL" className={`${field} mt-2`} />
+      <p className={hint ? "mt-1 text-[12px] text-muted" : "hidden"}>{hint}</p>
+      {err && <p className="mt-1 text-[12px] text-red-600">{err}</p>}
+    </div>
   );
 }
