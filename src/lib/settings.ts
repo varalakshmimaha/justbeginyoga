@@ -20,6 +20,7 @@ export type ResolvedSettings = {
 };
 
 const DEFAULT_LOGO = "/assets/jb-logo.png";
+const DEFAULT_FAVICON = "/assets/favicon.png";
 
 // Cached per request. Falls back to SITE/env defaults so the site keeps
 // working even before any settings row exists (or if the DB is unreachable).
@@ -39,8 +40,8 @@ export const getSettings = cache(async (): Promise<ResolvedSettings> => {
     facebook: row?.facebook || SITE.social.facebook,
     instagram: row?.instagram || SITE.social.instagram,
     logoUrl,
-    // Favicon falls back to the logo when not set (logo is a PNG — Google-friendly).
-    faviconUrl: row?.faviconUrl || logoUrl,
+    // Favicon falls back to the clean square emblem (PNG — Google-friendly).
+    faviconUrl: row?.faviconUrl || DEFAULT_FAVICON,
     gaId: row?.gaId || process.env.NEXT_PUBLIC_GA_ID || "",
     gscVerification: row?.gscVerification || process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
     razorpayEnabled:
