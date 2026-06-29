@@ -30,6 +30,7 @@ export const getSettings = cache(async (): Promise<ResolvedSettings> => {
   } catch {
     row = null;
   }
+  const logoUrl = row?.logoUrl || DEFAULT_LOGO;
   return {
     phone: row?.phone || SITE.phone,
     email: row?.email || SITE.email,
@@ -37,8 +38,9 @@ export const getSettings = cache(async (): Promise<ResolvedSettings> => {
     address: row?.address || "",
     facebook: row?.facebook || SITE.social.facebook,
     instagram: row?.instagram || SITE.social.instagram,
-    logoUrl: row?.logoUrl || DEFAULT_LOGO,
-    faviconUrl: row?.faviconUrl || DEFAULT_LOGO,
+    logoUrl,
+    // Favicon falls back to the logo when not set (logo is a PNG — Google-friendly).
+    faviconUrl: row?.faviconUrl || logoUrl,
     gaId: row?.gaId || process.env.NEXT_PUBLIC_GA_ID || "",
     gscVerification: row?.gscVerification || process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
     razorpayEnabled:
