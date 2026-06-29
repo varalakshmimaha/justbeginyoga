@@ -82,7 +82,7 @@ export default function SettingsForm({ values }: { values: SettingsValues }) {
         <p className="mb-5 mt-1 text-[13px] text-muted">Upload images to <code className="rounded bg-white px-1 ring-1 ring-[var(--color-line)]">/public/assets</code> then reference the path, or paste a full URL.</p>
         <div className="grid gap-5 sm:grid-cols-2">
           <ImageUploadField name="logoUrl" label="Logo" defaultValue={v.logoUrl ?? ""} hint="Used in the header & footer." />
-          <ImageUploadField name="faviconUrl" label="Favicon" defaultValue={v.faviconUrl ?? ""} hint="Browser-tab icon. Use a square PNG (512×512) for best results in Google." />
+          <ImageUploadField name="faviconUrl" label="Favicon" defaultValue={v.faviconUrl ?? ""} hint="Browser-tab icon. Use a square PNG or ICO — Google does NOT support WebP favicons." />
         </div>
       </div>
 
