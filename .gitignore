@@ -42,3 +42,6 @@ next-env.d.ts
 
 # user-uploaded images (live on server)
 /public/assets/uploads/
+
+# runtime user uploads (served via /uploads route)
+/uploads/

@@ -45,7 +45,9 @@ export async function POST(request: Request) {
   const filename = `${base}-${Date.now()}.${ext}`;
 
   try {
-    const dir = path.join(process.cwd(), "public", "assets", "uploads");
+    // Stored outside /public — Next doesn't serve runtime-added public files.
+    // Served back via the /uploads/[...path] route handler.
+    const dir = path.join(process.cwd(), "uploads");
     await mkdir(dir, { recursive: true });
     const buffer = Buffer.from(await file.arrayBuffer());
     await writeFile(path.join(dir, filename), buffer);
@@ -54,5 +56,5 @@ export async function POST(request: Request) {
     return Response.json({ error: "Could not save the file." }, { status: 500 });
   }
 
-  return Response.json({ url: `/assets/uploads/${filename}` });
+  return Response.json({ url: `/uploads/${filename}` });
 }
