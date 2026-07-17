@@ -51,11 +51,11 @@ export default function SettingsForm({ values }: { values: SettingsValues }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={lbl}>Phone (display)</label>
-            <input name="phone" defaultValue={v.phone ?? ""} placeholder="+91 84317 43227" className={field} />
+            <input name="phone" defaultValue={v.phone ?? ""} placeholder="+91 91089 66942" className={field} />
           </div>
           <div>
             <label className={lbl}>WhatsApp link</label>
-            <input name="whatsapp" defaultValue={v.whatsapp ?? ""} placeholder="https://wa.me/918431743227" className={field} />
+            <input name="whatsapp" defaultValue={v.whatsapp ?? ""} placeholder="https://wa.me/919108966942" className={field} />
           </div>
           <div>
             <label className={lbl}>Email</label>
@@ -63,7 +63,7 @@ export default function SettingsForm({ values }: { values: SettingsValues }) {
           </div>
           <div>
             <label className={lbl}>Address</label>
-            <input name="address" defaultValue={v.address ?? ""} placeholder="Bengaluru, India" className={field} />
+            <input name="address" defaultValue={v.address ?? ""} placeholder="Flat 3B, No 56 Aaradhana Building, Maragondanahalli, Bengaluru 560036" className={field} />
           </div>
           <div>
             <label className={lbl}>Facebook URL</label>

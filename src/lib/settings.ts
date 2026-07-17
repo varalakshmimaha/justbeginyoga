@@ -35,7 +35,7 @@ export const getSettings = cache(async (): Promise<ResolvedSettings> => {
     phone: row?.phone || SITE.phone,
     email: row?.email || SITE.email,
     whatsapp: row?.whatsapp || SITE.whatsapp,
-    address: row?.address || "",
+    address: row?.address || SITE.address,
     facebook: row?.facebook || SITE.social.facebook,
     instagram: row?.instagram || SITE.social.instagram,
     logoUrl,

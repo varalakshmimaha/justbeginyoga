@@ -7,9 +7,11 @@ export const SITE = {
     "Online and in-person yoga classes with certified instructor Anusha Shetty — personal, group, apartment and corporate yoga for every level.",
   founder: "Anusha Shetty",
   email: "anushashettyyoga@gmail.com",
-  phone: "+91 84317 43227",
-  phoneRaw: "918431743227",
-  whatsapp: "https://wa.me/918431743227",
+  phone: "+91 91089 66942",
+  phoneRaw: "919108966942",
+  whatsapp: "https://wa.me/919108966942",
+  address:
+    "Flat 3B, 3rd Floor, No 56 Aaradhana Building, Maragondanahalli, Bengaluru (Urban), Karnataka 560036",
   social: {
     facebook: "https://www.facebook.com/justbeginyogastudio",
     instagram: "https://www.instagram.com/justb_begin_yoga",
